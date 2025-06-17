@@ -1,4 +1,3 @@
-# Use an official Python image
 FROM python:3.10-slim
 
 # Install system dependencies
@@ -9,20 +8,19 @@ RUN apt-get update && \
 # Install Ollama
 RUN curl -fsSL https://ollama.com/install.sh | sh
 
-# Install Python dependencies
+# Set working directory
 WORKDIR /app
+
+# Install Python dependencies
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy app code
+# Copy your app code
 COPY . .
 
-# Download the model ahead of time (optional)
-RUN ollama pull llama3.2
-
-# Expose Railway's default port
-ENV PORT 8080
+# Expose port for Streamlit
 EXPOSE 8080
+ENV PORT=8080
 
-# Run Ollama in background + Streamlit
-CMD bash -c "ollama serve & streamlit run app.py --server.port 8080 --server.address 0.0.0.0"
+# Start Ollama, pull model, then run Streamlit
+CMD bash -c "ollama serve & sleep 5 && ollama pull llama3.2 && streamlit run app.py --server.port 8080 --server.address 0.0.0.0"
