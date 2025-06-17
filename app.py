@@ -10,7 +10,7 @@ FREE_LIMIT = 3
 
 
 st.set_page_config(page_title="🧠 Smart Content Tools", layout="centered")
-st.title("🧠 Smart Content Agent Bundle")
+st.title("🧠 InstaContent AI")
 
 tabs = st.tabs(["🎯 Title Generator", "📝 Content Summarizer", "🏷️ Hashtag Optimizer"])
 
