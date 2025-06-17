@@ -22,7 +22,7 @@ Only return the generated title. No quotes or explanations.
 
     headers = {
         "Authorization": f"Bearer {API_KEY}",
-        "HTTP-Referer": "https://yourdomain.com",  # replace later
+        "HTTP-Referer": "https://instacontentai.up.railway.app/",  # replace later
         "X-Title": "Smart Content Tools"
     }
 

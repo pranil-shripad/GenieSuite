@@ -15,7 +15,7 @@ Only return the hashtags separated by commas. No explanations.
 
     headers = {
         "Authorization": f"Bearer {API_KEY}",
-        "HTTP-Referer": "https://your-deployed-app-url",  # Replace this later
+        "HTTP-Referer": "https://instacontentai.up.railway.app/",  # Replace this later
         "X-Title": "Smart Content Tools"
     }
 
