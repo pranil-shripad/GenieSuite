@@ -1,0 +1,19 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Environment files
+.env
+*.env
+
+# Ollama model cache (if it appears)
+~/.ollama
+
+# Streamlit files
+.streamlit/
+*.log
+
+# OS and editor files
+.DS_Store
+.vscode/
+.idea/
