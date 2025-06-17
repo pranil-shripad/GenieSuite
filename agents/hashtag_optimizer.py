@@ -1,38 +1,36 @@
 import requests
-import json
+import os
 
-def generate_hashtags(content, model="llama3.2"):
+API_KEY = os.getenv("OPENROUTER_API_KEY")
+
+def generate_hashtags(content, model="meta-llama/llama-3-8b-instruct"):
     prompt = f"""
-You are a social media expert. Based on the following content, generate a list of 5 to 10 relevant and trending hashtags. Do not include explanations. Only output the hashtags, separated by spaces or new lines.
+Based on the following content, generate 5 to 10 relevant and trending hashtags for social media (Instagram, YouTube, X). Do not include the '#' symbol — just return them comma-separated.
 
 Content:
 {content}
+
+Only return the hashtags separated by commas. No explanations.
 """
 
+    headers = {
+        "Authorization": f"Bearer {API_KEY}",
+        "HTTP-Referer": "https://your-deployed-app-url",  # Replace this later
+        "X-Title": "Smart Content Tools"
+    }
+
+    data = {
+        "model": model,
+        "messages": [
+            {"role": "user", "content": prompt}
+        ]
+    }
+
     try:
-        response = requests.post(
-            "http://localhost:11434/api/generate",
-            json={"model": model, "prompt": prompt},
-            stream=True
-        )
-
-        if response.status_code == 200:
-            output = ""
-            for line in response.iter_lines():
-                if line:
-                    try:
-                        data = json.loads(line.decode("utf-8"))
-                        if "response" in data:
-                            output += data["response"]
-                    except json.JSONDecodeError:
-                        continue
-
-            # Cleanup: Remove leading "#" if needed, split, and reformat
-            hashtags = [tag.strip(" #") for tag in output.replace("\n", " ").split()]
-            unique_tags = sorted(set(filter(lambda x: x, hashtags)))
-            return "\n".join(f"#{tag}" for tag in unique_tags)
-
+        res = requests.post("https://openrouter.ai/api/v1/chat/completions", headers=headers, json=data)
+        if res.status_code == 200:
+            return res.json()['choices'][0]['message']['content'].strip()
         else:
-            return f"[Error] Status {response.status_code}: {response.text}"
-    except requests.exceptions.RequestException as e:
-        return f"[Connection Error] {e}"
+            return f"[Error {res.status_code}] {res.text}"
+    except Exception as e:
+        return f"[Connection Error] {str(e)}"
